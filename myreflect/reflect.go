@@ -1,0 +1,5 @@
+package myreflect
+
+func MainReflect() {
+
+}

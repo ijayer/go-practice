@@ -1,0 +1,5 @@
+package mymiddleware
+
+func MainMiddleware() {
+
+}
