@@ -73,4 +73,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+.exe
+*.sh
 .idea/
