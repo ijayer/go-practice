@@ -2,8 +2,9 @@ package main
 
 import (
 	"flag"
-	"instance.golang.com/mymiddleware/handler"
-	"instance.golang.com/mymiddleware/middleware"
+	//"instance.golang.com/mymiddleware/handler"
+	//"instance.golang.com/mymiddleware/middleware"
+	"instance.golang.com/mymiddleware/logmiddleware"
 )
 
 // command line parameter
@@ -13,6 +14,7 @@ import (
 var Port = flag.String("port", "8000", "http port")
 
 func main() {
-	handler.MainHandler(Port)
-	middleware.MainMiddleware()
+	//handler.MainHandler(Port)
+	//middleware.MainMiddleware(Port)
+	logmiddleware.MainLogMiddleware(Port)
 }
