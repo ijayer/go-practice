@@ -1,5 +1,0 @@
-package myroter
-
-func MainRouter() {
-
-}
