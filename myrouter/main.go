@@ -2,9 +2,10 @@ package main
 
 import (
 	"os"
-	log "github.com/Sirupsen/logrus"
 	"flag"
-	"instance.golang.com/myrouter/myhttprouter"
+	log "github.com/Sirupsen/logrus"
+	"instance.golang.com/myrouter/mygorilla"
+	"fmt"
 )
 
 func init() {
@@ -16,5 +17,9 @@ func init() {
 var Port = flag.String("port", "8000", "http port")
 
 func main() {
-	myhttprouter.MainHttpRouter(Port)
+	fmt.Printf("##_______________[Listen and serice on：%s]\n", *Port)
+
+	//myhttprouter.MainHttpRouter(Port)
+
+	mygorilla.MainGorilla(Port)
 }
