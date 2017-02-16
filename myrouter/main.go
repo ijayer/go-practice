@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 	"flag"
-	log "github.com/Sirupsen/logrus"
-	"instance.golang.com/myrouter/mygorilla"
 	"fmt"
+	"instance.golang.com/myrouter/myiris"
+	log "github.com/Sirupsen/logrus"
 )
 
 func init() {
@@ -21,5 +21,7 @@ func main() {
 
 	//myhttprouter.MainHttpRouter(Port)
 
-	mygorilla.MainGorilla(Port)
+	//mygorilla.MainGorilla(Port)
+
+	myiris.MainIris(Port)
 }
