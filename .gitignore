@@ -76,3 +76,5 @@ $RECYCLE.BIN/
 .exe
 *.sh
 .idea/
+/node_modules/
+/package.json
