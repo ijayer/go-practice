@@ -16,5 +16,6 @@ var Port = flag.String("port", "8000", "http port")
 func main() {
 	//handler.MainHandler(Port)
 	//middleware.MainMiddleware(Port)
+	flag.Parse()
 	logmiddleware.MainLogMiddleware(Port)
 }
