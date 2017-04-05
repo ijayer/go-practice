@@ -4,28 +4,28 @@ import "fmt"
 
 type Hub struct {
 	// registered connections
-	connections 	map[*Conn]bool
+	connections 	map[*Connection]bool
 	// inbound messages from the connections
 	broadcast   	chan []byte
 	// register requests from the connections
-	register 	chan *Conn
+	register 	chan *Connection
 	// unregister requests from the connections
-	unregister	chan *Conn
+	unregister	chan *Connection
 }
 
 var hub = Hub{
 	broadcast:	make(chan []byte),
-	register:	make(chan *Conn),
-	unregister: 	make(chan *Conn),
-	connections: 	make(map[*Conn]bool),
+	register:	make(chan *Connection),
+	unregister: 	make(chan *Connection),
+	connections: 	make(map[*Connection]bool),
 }
 
 func NewHub() *Hub {
 	return &Hub{
-		connections: 	make(map[*Conn]bool),
+		connections: 	make(map[*Connection]bool),
 		broadcast: 	make(chan []byte),
-		register: 	make(chan *Conn),
-		unregister: 	make(chan *Conn),
+		register: 	make(chan *Connection),
+		unregister: 	make(chan *Connection),
 	}
 }
 

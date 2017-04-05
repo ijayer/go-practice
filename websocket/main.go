@@ -1,3 +1,4 @@
+// websocket test: http://www.blue-zero.com/WebSocket/
 package main
 
 import (
@@ -5,21 +6,33 @@ import (
 	"net/http"
 	"text/template"
 	"github.com/Sirupsen/logrus"
+	"github.com/julienschmidt/httprouter"
+	"fmt"
+	"github.com/rs/cors"
 )
 
 var addr = flag.String("addr", ":8082", "http service addr")
-var homeTemplate = template.Must(template.ParseFiles("D:/code/go_path/src/instance.golang.com/websocket/home.html"))
+var homeTemplate = template.Must(template.ParseFiles("D:/code/go_path/src/instance.golang.com/websocket/client/home.html"))
 
 func main() {
 	flag.Parse()
 
+	router := httprouter.New()
+
 	// listen channel semaphore
 	go hub.run()
 
-	http.HandleFunc("/home", serveHome)
-	http.HandleFunc("/ws", serveWs)
+	userResource := NewUserResource()
+	router.GET("/home", userResource.serveHome)
+	router.GET("/ws/*name", userResource.serveWs)
 
-	if err := http.ListenAndServe(*addr, nil); err != nil {
+	c := cors.New(cors.Options {
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "PATCH", "DELETE"},
+		AllowedHeaders: []string{"Content-Type"},
+	})
+	fmt.Printf("##_______________[Listen and serice on%s]\n", *addr)
+	if err := http.ListenAndServe(*addr, c.Handler(router)); err != nil {
 		logrus.Fatal("ListenAndServe: ", err)
 	}
 }

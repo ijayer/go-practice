@@ -8,6 +8,7 @@ import (
 	"instance.golang.com/utils"
 	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/websocket"
+	"net/http"
 )
 
 const (
@@ -22,23 +23,30 @@ var (
 	space   = []byte{' '}
 )
 
-var upgrader = websocket.Upgrader{
+var Upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+	CheckOrigin:func(r *http.Request) bool {
+		return true
+	},
 }
 
 // Conn is an middleman between the webSocket connection and the hub
-type Conn struct {
+type Connection struct {
+	// id
+	id              string
+	// platform
+	platform        string
 	// the web socket connection
-	ws 	*websocket.Conn
+	ws 	        *websocket.Conn
 	// buffered channel of outbound messages
-	send 	chan []byte
+	send 	        chan []byte
 }
 
 
-// readPump pumps messages from the webSocket connection to the hub
-func (c *Conn) readPump() {
-	fmt.Println("##_________into readPump func")
+// reader pumps messages from the webSocket connection to the hub
+func (s *UserResource) Reader(c *Connection) {
+	fmt.Println("##_________into reader")
 	defer func() {
 		hub.unregister <- c
 		c.ws.Close()
@@ -65,14 +73,14 @@ func (c *Conn) readPump() {
 }
 
 // write writes a message with the given message type and payload
-func (c *Conn) write(mt int, payload []byte) error {
+func (s *UserResource) write(c *Connection, mt int, payload []byte) error {
 	c.ws.SetWriteDeadline(time.Now().Add(writeWait))
 	return c.ws.WriteMessage(mt, payload)
 }
 
 // writePum pumps messages from the hub to the webSocket connection
-func (c *Conn) writePump() {
-	fmt.Println("##_________into writePump func")
+func (s *UserResource) writer(c *Connection) {
+	fmt.Println("##_________into writer")
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
@@ -83,7 +91,7 @@ func (c *Conn) writePump() {
 		case message, ok := <- c.send:
 			if !ok {
 				// the hub closed the channel
-				c.write(websocket.CloseMessage, []byte{})
+				s.write(c, websocket.CloseMessage, []byte{})
 				return
 			}
 
@@ -109,7 +117,7 @@ func (c *Conn) writePump() {
 
 		case <- ticker.C:
 			fmt.Printf("##_________Send ping at: %v\n", utils.Now())
-			if err := c.write(websocket.PingMessage, []byte{'p'}); err != nil {
+			if err := s.write(c, websocket.PingMessage, []byte{'p'}); err != nil {
 				return
 			}
 		}
