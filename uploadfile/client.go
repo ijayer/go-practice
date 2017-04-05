@@ -1,31 +1,147 @@
 package main
 
 import (
-	"fmt"
-	"strings"
 	"net/http"
+	"fmt"
+	"io"
+	"time"
 	"io/ioutil"
+	"encoding/base64"
+	"os"
 )
 
-func main() {
+func indexHandle(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("获取页面失败")
+		}
+	}()
 
-	url := "http://localhost:8081/v1.0/feedbacks"
+	// 上传页面
+	w.Header().Add("Content-Type", "text/html")
+	w.WriteHeader(200)
+	html :=
+	`<html>
+	    <head>
+	        <title>Golang Upload Files</title>
+	    </head>
+	    <body>
+	        <form id="uploadForm"  enctype="multipart/form-data" action="/upload" method="POST">
+	            <p>Golang Upload</p>
+	            <br/>
+	                <input type="file" id="file1" name="userfile" multiple="multiple" />
+	            <br/>
+	            <br/>
+			<input type="text" name="tips" value="tips tips tips">
+	            <br/>
+	            <input type="submit" value="Upload">
+	        </form>
+	    </body>
+	</html>`
+	io.WriteString(w, html)
+}
 
-	payload := strings.NewReader("------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"girl.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--")
+func uploadServer(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("文件上传异常")
+		}
+	}()
 
-	req, _ := http.NewRequest("POST", url, payload)
+	if "POST" == r.Method {
+		//在使用r.MultipartForm前必须先调用ParseMultipartForm方法，参数为最大缓存
+		err := r.ParseMultipartForm(32 << 20) //
+		if err != nil {
+			fmt.Printf("#error: %v\n", err.Error())
+		}
+		//fmt.Println(r.MultipartForm)
+		//fmt.Println(r.MultipartReader())
 
-	req.Header.Add("authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4YmY5YWNiZjYwODM1MWY1YzQyMzk1ZiIsImlzcyI6InFpeGluZy1ncm91cCJ9.RJncHFrGDwQp_yzxuwwWJdkbdbPfn2JM9PywFZrl9aE")
-	req.Header.Add("content-type", "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW")
-	req.Header.Add("cache-control", "no-cache")
-	req.Header.Add("postman-token", "c6142389-2b24-9851-7b49-3db2c8c3ad16")
+		// file
+		if r.MultipartForm != nil && r.MultipartForm.File != nil {
+			fileHeaderS := r.MultipartForm.File["userfile"] //获取所有上传文件信息
+			num := len(fileHeaderS)
+			fmt.Printf("总文件数：%d 个文件\n", num)
 
-	res, _ := http.DefaultClient.Do(req)
+			// 循环对每个文件进行处理
+			for n, fileHeader := range fileHeaderS {
+				// 获取文件名
+				filename := fileHeader.Filename
 
-	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
+				// 结束文件
+				file, err := fileHeader.Open()
+				if err != nil {
+					fmt.Println(err)
+				}
+				defer file.Close()
 
-	fmt.Println(res)
-	fmt.Println(string(body))
+				// read form file
+				src := make([]byte, 5000000)
+				num, err := file.Read(src)
+				if err != nil {
+					fmt.Printf("#error: %v\n", err.Error())
+				}
 
+				// encode to string and save into file
+				srcString := base64.StdEncoding.EncodeToString(src[0:num])
+				err = ioutil.WriteFile("./uploadfile/" + filename +".txt", []byte(srcString), 0666)
+				if err != nil {
+					fmt.Printf("#error: %v\n", err.Error())
+				}
+
+				// read from file and decode
+				tb, _ := ioutil.ReadFile("./uploadfile/"+filename+".txt")
+				dist, _ := base64.StdEncoding.DecodeString(string(tb))
+
+				// create a new image file
+				f, _ := os.OpenFile("./uploadfile/new"+ filename + ".png", os.O_RDWR|os.O_CREATE, os.ModePerm)
+				defer f.Close()
+				f.Write(dist)
+
+
+				fmt.Printf(
+					"%s  NO.: %2d, Size: %4d KB, Name：%s,\n",
+					time.Now().Format("2006-01-02 15:04:05"),
+					n,
+					num / 1024,
+					filename,
+				)
+
+				//f, err := os.Create("./uploadfile/"+filename)
+				//defer f.Close()
+				//io.Copy(f, file)
+				//
+				//// 获取文件状态信息
+				//fstat, _ := f.Stat()
+				//
+				//// 打印接收信息
+				//fmt.Fprintf(
+				//	w, "%s  NO.: %2d, Size: %4d KB, Name：%s\n",
+				//	time.Now().Format("2006-01-02 15:04:05"),
+				//	n,
+				//	fstat.Size()/1024,
+				//	filename,
+				//)
+				//fmt.Printf(
+				//	"%s  NO.: %2d, Size: %4d KB, Name：%s,\n",
+				//	time.Now().Format("2006-01-02 15:04:05"),
+				//	n,
+				//	fstat.Size()/1024,
+				//	filename,
+				//)
+			}
+		}
+
+		// text
+		tips := r.Form.Get("tips")
+		fmt.Printf("%s  Key: %v  Value: %v\n",
+			time.Now().Format("2006-01-02 15:04:05"),
+			"tips",
+			tips,
+		)
+		return
+
+	} else {
+		indexHandle(w, r)
+	}
 }
