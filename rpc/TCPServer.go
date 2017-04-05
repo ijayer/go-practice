@@ -4,10 +4,10 @@ package main
 
 import (
 	"errors"
-	"net/rpc"
-	"net"
-	"os"
 	"log"
+	"net"
+	"net/rpc"
+	"os"
 )
 
 type Args struct {
@@ -23,13 +23,13 @@ type Arith int
 //rpc:      function
 //param:    args *Reveive   args *Reply
 //return:   error
-func (t *Arith) MultiplyTcp(receive *Args, reply *int) error{
+func (t *Arith) MultiplyTcp(receive *Args, reply *int) error {
 	*reply = receive.A * receive.B
 	return nil
 }
 
 //
-func (t *Arith) DivideTcp(receive *Args, reply *Quotient) error{
+func (t *Arith) DivideTcp(receive *Args, reply *Quotient) error {
 	if receive.B == 0 {
 		return errors.New("divide by zero")
 	}
@@ -38,7 +38,7 @@ func (t *Arith) DivideTcp(receive *Args, reply *Quotient) error{
 	return nil
 }
 
-func main(){
+func main() {
 	// 分配内存空间
 	arith := new(Arith)
 
@@ -51,13 +51,13 @@ func main(){
 	// 3. 阻塞接受
 
 	tcpAddr, err := net.ResolveTCPAddr("tcp", ":1234")
-	if err != nil{
+	if err != nil {
 		log.Println("Fatal Error: ", err.Error())
 		os.Exit(1)
 	}
 
 	tcpListener, err := net.ListenTCP("tcp", tcpAddr)
-	if err != nil{
+	if err != nil {
 		log.Println("Fatal Error: ", err.Error())
 		os.Exit(1)
 	}

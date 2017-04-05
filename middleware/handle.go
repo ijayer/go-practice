@@ -1,14 +1,14 @@
-package handler
+package main
 
 import (
-	"net/http"
-	"log"
-	"strings"
 	"fmt"
+	"log"
+	"net/http"
+	"strings"
 )
 
 // Empty struct type
-type foo struct {}
+type foo struct{}
 
 // foo implement ServeHTTP method of the http.Handler interface
 func (f foo) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -41,9 +41,9 @@ func (m multiplexer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 var mux = multiplexer{
-	"/": 		foo{},
-	"/about/":	page{"about"},
-	"/contact/":	page{"contact"},
+	"/":         foo{},
+	"/about/":   page{"about"},
+	"/contact/": page{"contact"},
 }
 
 func appendingTrailingSlash(handler http.Handler) http.Handler {
@@ -53,7 +53,7 @@ func appendingTrailingSlash(handler http.Handler) http.Handler {
 			log.Println("#______________________into return handler")
 			fmt.Println(r.URL.Path)
 			if !strings.HasSuffix(r.URL.Path, "/") {
-				http.Redirect(w, r, r.URL.Path + "/", http.StatusNotFound)
+				http.Redirect(w, r, r.URL.Path+"/", http.StatusNotFound)
 			} else {
 				handler.ServeHTTP(w, r)
 			}
@@ -64,6 +64,5 @@ func appendingTrailingSlash(handler http.Handler) http.Handler {
 // MainHandler called in main function
 func MainHandler(port *string) {
 	// wrap mux with middleware
-	http.ListenAndServe(":" + *port, appendingTrailingSlash(mux))
+	http.ListenAndServe(":"+*port, appendingTrailingSlash(mux))
 }
-

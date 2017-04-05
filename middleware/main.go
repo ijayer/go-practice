@@ -2,9 +2,6 @@ package main
 
 import (
 	"flag"
-	//"instance.golang.com/mymiddleware/handler"
-	//"instance.golang.com/mymiddleware/middleware"
-	"instance.golang.com/mymiddleware/logmiddleware"
 )
 
 // command line parameter
@@ -17,5 +14,5 @@ func main() {
 	//handler.MainHandler(Port)
 	//middleware.MainMiddleware(Port)
 	flag.Parse()
-	logmiddleware.MainLogMiddleware(Port)
+	MainLogMiddleware(Port)
 }

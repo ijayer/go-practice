@@ -3,10 +3,10 @@
 package main
 
 import (
-	"os"
 	"fmt"
-	"net/rpc"
 	"github.com/labstack/gommon/log"
+	"net/rpc"
+	"os"
 )
 
 type Args struct {
@@ -17,7 +17,7 @@ type Quotient struct {
 	Quo, Rem int
 }
 
-func main(){
+func main() {
 	// 获取命令行参数(os/Args包)
 	// go run HTTPClient.go localhost
 	if len(os.Args) != 1 {
@@ -27,7 +27,7 @@ func main(){
 	//serverAddress := os.Args[1]
 	serverAddress := "localhost"
 
-	client, err := rpc.DialHTTP("tcp", serverAddress + ":1234")
+	client, err := rpc.DialHTTP("tcp", serverAddress+":1234")
 	if err != nil {
 		log.Fatal("dialing", err)
 	}

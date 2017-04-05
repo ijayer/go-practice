@@ -1,13 +1,13 @@
-package logmiddleware
+package main
 
 import (
-	"net/http"
 	"log"
+	"net/http"
 )
 
 func MiddlewareOne(next http.Handler) http.Handler {
 	return http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request){
+		func(w http.ResponseWriter, r *http.Request) {
 			log.Println("#______________________into middleware one")
 			next.ServeHTTP(w, r)
 			log.Println("#______________________into middleware one again")
@@ -36,5 +36,5 @@ func FinalMiddleware(w http.ResponseWriter, r *http.Request) {
 
 func MainLogMiddleware(port *string) {
 	finalHandler := http.HandlerFunc(FinalMiddleware)
-	http.ListenAndServe(":" + *port, MiddlewareOne(MiddlewareTwo(finalHandler)))
+	http.ListenAndServe(":"+*port, MiddlewareOne(MiddlewareTwo(finalHandler)))
 }

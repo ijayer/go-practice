@@ -3,10 +3,10 @@
 package main
 
 import (
-	"strings"
 	"bufio"
 	"bytes"
 	"log"
+	"strings"
 )
 
 /**
@@ -36,7 +36,7 @@ import (
  * }
  */
 
-func main(){
+func main() {
 	//1. construct a Reader use bufio.NewReader: 读缓冲区
 	ReadBuf := strings.NewReader("1234567890")
 	reader := bufio.NewReader(ReadBuf)
@@ -54,7 +54,7 @@ func main(){
 	buff, _ = reader.Peek(5)
 
 	writer.Write(buff)
-	writer.Flush()		//remember call flush to finshed write operation
+	writer.Flush() //remember call flush to finshed write operation
 
 	log.Println("buf---changed: ", buff)
 	log.Println("buf-unchanged: ", ReadBuf)
@@ -63,11 +63,11 @@ func main(){
 	//we can use for to read data cycle, n<=0, read over.
 	log.Println("Read() demo...")
 	buff1 := make([]byte, 2)
-	for{
+	for {
 		n, _ := reader.Read(buff1)
 		//CheckError(err)
 
-		if n<=0{
+		if n <= 0 {
 			log.Println("read end... ")
 			break
 		}
@@ -101,9 +101,9 @@ func main(){
 	log.Println("ReadBytes() demo...")
 	readBuf3 := strings.NewReader("中文;123;456;789")
 	reader3 := bufio.NewReader(readBuf3)
-	for ; ;  {
+	for {
 		line, err := reader3.ReadBytes(';')
-		if err != nil {	//not found delim, return err!=nil
+		if err != nil { //not found delim, return err!=nil
 			log.Println("not found delim, read end")
 			break
 		}
@@ -113,9 +113,9 @@ func main(){
 	//9. Flush: submit data, update data at once
 	log.Println("write demo...")
 	bt4 := bytes.NewBuffer(make([]byte, 0))
-	writer4 := bufio.NewWriter(bt4)		//create write-buffer and default: 4096
+	writer4 := bufio.NewWriter(bt4) //create write-buffer and default: 4096
 
-	writer4.WriteString("1234567890")	//write 10 bytes in write-buffer, last 4086
+	writer4.WriteString("1234567890") //write 10 bytes in write-buffer, last 4086
 	writer4.WriteRune(rune('号'))
 	//Buffered returns the number of bytes that have been written into the current buffer.
 	//Available returns how many bytes are unused in the buffer.
@@ -129,7 +129,7 @@ func main(){
 	//10. writestring(), write(), writebyte(), writerune()
 
 	//11. readfrom
-	Readbuf4 := strings.NewReader("兰州交通大学物联网工程专业")
+	Readbuf4 := strings.NewReader("www.google.com")
 	bt6 := bytes.NewBuffer(make([]byte, 0))
 
 	writer5 := bufio.NewWriter(bt6)
@@ -138,7 +138,7 @@ func main(){
 	log.Println(bt6)
 }
 
-func CheckError(err error){
+func CheckError(err error) {
 	if err != nil {
 		log.Println("Faltal error ---> ", err.Error())
 		return

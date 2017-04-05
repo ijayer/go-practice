@@ -17,7 +17,7 @@ func MainHttpRouter(port *string) {
 	router.GET("/protected/", BasicAuth(Protected, "username", "secret"))
 
 	// static file server
-	router.ServeFiles("/static/*filepath", http.Dir("./myrouter/static_sources"))
+	router.ServeFiles("/static/*filepath", http.Dir("./router/static_sources"))
 
 	log.Fatal(http.ListenAndServe(":" + *port, router))
 }

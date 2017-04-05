@@ -4,9 +4,9 @@ package main
 
 import (
 	"errors"
-	"net/rpc"
-	"net/http"
 	"fmt"
+	"net/http"
+	"net/rpc"
 )
 
 type Args struct {
@@ -19,7 +19,7 @@ type Quotient struct {
 
 type Arith int
 
-func (t *Arith) Multiply(args *Args, reply *int) error{
+func (t *Arith) Multiply(args *Args, reply *int) error {
 	*reply = args.A * args.B
 	return nil
 }
@@ -32,7 +32,6 @@ func (t *Arith) Divide(args *Args, quo *Quotient) error {
 	quo.Rem = args.A % args.B
 	return nil
 }
-
 
 func main() {
 	arith := new(Arith)

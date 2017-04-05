@@ -6,9 +6,9 @@ import (
 
 func main() {
 
-	ch := make(chan int) 	// 创建一个新通道
+	ch := make(chan int) // 创建一个新通道
 
-	go generate(ch) 	// 开启一个协程，作为数据生成器
+	go generate(ch) // 开启一个协程，作为数据生成器
 
 	for {
 		prime := <-ch
@@ -22,13 +22,13 @@ func main() {
 
 func generate(ch chan int) {
 	for i := 2; ; i++ {
-		ch <- i 	// send `i` to channel `ch`
+		ch <- i // send `i` to channel `ch`
 	}
 }
 
 func filter(in, out chan int, prime int) {
 	for {
-		k := <- in
+		k := <-in
 		fmt.Printf("k=%v\n", k)
 		if k%prime != 0 {
 			out <- k

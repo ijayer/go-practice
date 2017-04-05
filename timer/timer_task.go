@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"time"
 	"instance.golang.com/utils"
+	"time"
 )
 
 var code map[int]string = make(map[int]string)
@@ -23,7 +23,7 @@ func main() {
 func cacheCode(key int, value string) {
 	code[key] = value
 	fmt.Printf("##______________cached code=%v\n", code)
-	time.AfterFunc(5 * time.Second, func() {
+	time.AfterFunc(5*time.Second, func() {
 		fmt.Println("##______________into timer task func")
 		delete(code, key)
 		fmt.Printf("##______________deleted code=%v\n", code)

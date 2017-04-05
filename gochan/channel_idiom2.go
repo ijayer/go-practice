@@ -15,14 +15,13 @@ func main() {
 func pump1() chan string {
 	ch := make(chan string)
 	go func() {
-		for i:=0; ; i++ {
+		for i := 0; ; i++ {
 			ch <- utils.Now()
 			time.Sleep(1000 * time.Millisecond)
 		}
 	}()
 	return ch
 }
-
 
 // recv channel
 func suck1(ch chan string) {

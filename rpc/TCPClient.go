@@ -3,10 +3,10 @@
 package main
 
 import (
-	"os"
 	"fmt"
-	"net/rpc"
 	"log"
+	"net/rpc"
+	"os"
 )
 
 type Args struct {
@@ -17,7 +17,6 @@ type Quotient struct {
 	Quo, Rem int
 }
 
-
 func main() {
 	if len(os.Args) != 1 {
 		fmt.Println("Usage: ", os.Args[0], "server:port")
@@ -27,14 +26,14 @@ func main() {
 	service := "localhost"
 
 	//创建tcp连接
-	client, err := rpc.Dial("tcp", service + ":1234")
+	client, err := rpc.Dial("tcp", service+":1234")
 
 	args := Args{8, 2}
 
 	var reply int
 
 	err = client.Call("Arith.MultiplyTcp", args, &reply)
-	if err != nil{
+	if err != nil {
 		log.Println("Fatal Error: ", err.Error())
 		os.Exit(1)
 	}
@@ -43,7 +42,7 @@ func main() {
 	var quot Quotient
 
 	err = client.Call("Arith.DivideTcp", args, &quot)
-	if err != nil{
+	if err != nil {
 		log.Println("Fatal Error: ", err.Error())
 		os.Exit(1)
 	}

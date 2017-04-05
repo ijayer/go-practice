@@ -10,15 +10,15 @@ import (
 func Gomail() {
 	// authentication config
 	ec := NewEmailConfig(
-		"smtp.163.com",                  // email server host
-		25,                              // email server port
-		"example@163.com",          // your email account
-		"******",                   // authorization code not password
+		"smtp.163.com",    // email server host
+		25,                // email server port
+		"example@163.com", // your email account
+		"******",          // authorization code not password
 	)
 
 	// email
 	subject := utils.Now() + " [Hello]"
-	body    := "Verification code: " + utils.RandNumMath() + "\n\nThanks!"
+	body := "Verification code: " + utils.RandNumMath() + "\n\nThanks!"
 	//link := "Hello <a href = \"http://www.google.com\">google</a>"
 
 	fmt.Println("#______________start sending test mail...")

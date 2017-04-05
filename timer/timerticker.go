@@ -1,9 +1,9 @@
 package main
 
 import (
-	"time"
-	"github.com/Sirupsen/logrus"
 	"fmt"
+	"github.com/Sirupsen/logrus"
+	"time"
 )
 
 func main() {
@@ -27,7 +27,6 @@ func main() {
 
 	time.Sleep(3 * time.Second)
 	logrus.Println("#___________the timer is over...")
-
 
 	// Ticker(打点器)
 	logrus.Println("#___________ticker starting timing...")

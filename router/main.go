@@ -1,11 +1,11 @@
 package main
 
 import (
-	"os"
 	"flag"
 	"fmt"
-	"instance.golang.com/myrouter/myiris"
 	log "github.com/Sirupsen/logrus"
+	"instance.golang.com/router/myiris"
+	"os"
 )
 
 func init() {

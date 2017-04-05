@@ -20,7 +20,6 @@ func main() {
 	// 否则主函数退出, 所有操作都结束执行
 	// time.Sleep(1 * time.Second)
 
-
 	// -----------------------two
 	go sendData1(ch)
 	getData1(ch)
@@ -50,7 +49,7 @@ func getData(ch chan string) {
 	// time.Sleep(1 * time.Second)
 
 	for {
-		input = <- ch
+		input = <-ch
 		fmt.Printf("##_________input = %v\n", input)
 	}
 }

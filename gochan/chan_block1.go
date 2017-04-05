@@ -22,7 +22,7 @@ func main() {
 
 // 生产者，无线循环产生整形数
 func pump(ch chan int) {
-	for i:=0; ; i++ {
+	for i := 0; ; i++ {
 		ch <- i
 	}
 }

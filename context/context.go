@@ -1,9 +1,9 @@
-package context
+package main
 
 import (
+	"context"
 	"fmt"
 	"time"
-	"context"
 )
 
 func MainContext() {
@@ -29,7 +29,7 @@ func add(ctx context.Context) int {
 	go fmt.Println("##___________bdd() result:", bdd(ctx))
 
 	select {
-	case <- ctx.Done():
+	case <-ctx.Done():
 		return -1
 	default:
 		fmt.Printf("##___________%s\n", "add() not end")
@@ -45,7 +45,7 @@ func bdd(ctx context.Context) int {
 	go fmt.Println("##___________cdd() result:", cdd(ctx))
 
 	select {
-	case <- ctx.Done():
+	case <-ctx.Done():
 		return -2
 	default:
 		fmt.Printf("##___________%s\n", "bdd() not end")
@@ -56,7 +56,7 @@ func bdd(ctx context.Context) int {
 func cdd(ctx context.Context) int {
 	fmt.Printf("##___________%s\n", ctx.Value("boy"))
 	select {
-	case <- ctx.Done():
+	case <-ctx.Done():
 		return -3
 	default:
 		fmt.Printf("##___________%s\n", "cdd() not end")

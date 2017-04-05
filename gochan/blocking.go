@@ -13,9 +13,9 @@ func main() {
 	// 给接收者，否则就会产生死锁：
 	// fatal error: all goroutines are asleep - deadlock!
 
-	output <- 3	//
-	output <- 3	//
-	output <- 3	//
+	output <- 3 //
+	output <- 3 //
+	output <- 3 //
 	// output <- 3	// 程序阻塞
 	go f(output)
 

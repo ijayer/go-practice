@@ -1,8 +1,8 @@
 package main
 
 import (
-	"instance.golang.com/utils"
 	"fmt"
+	"instance.golang.com/utils"
 	"time"
 )
 
@@ -18,13 +18,13 @@ func main() {
 }
 
 func produce1(in1 chan int) {
-	for i:=0; ; i++ {
+	for i := 0; ; i++ {
 		in1 <- i
 	}
 }
 
 func produce2(in2 chan string) {
-	for i:=0; ; i++ {
+	for i := 0; ; i++ {
 		in2 <- utils.Now()
 	}
 }
@@ -32,9 +32,9 @@ func produce2(in2 chan string) {
 func consumers(out1 chan int, out2 chan string) {
 	for {
 		select {
-		case v := <- out1:
+		case v := <-out1:
 			fmt.Printf("##_________received from channel [1]: %v\n", v)
-		case vv := <- out2:
+		case vv := <-out2:
 			fmt.Printf("##_________received from channel [2]: %v\n", vv)
 		default:
 			fmt.Println("##_________channel don't output")

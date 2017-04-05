@@ -22,7 +22,7 @@ func MainGorilla(port *string) {
 	r.HandleFunc("/api/sources/songs", sourceStorage.DeleteMethodDemo).Methods("Delete")
 
 	// static file server
-	http.Handle("/api/sources", http.FileServer(http.Dir("./myrouter/")))
+	http.Handle("/api/sources", http.FileServer(http.Dir("./router/")))
 
 	server := &http.Server{
 		Handler:handlers.ContentTypeHandler(handlers.CORS(
