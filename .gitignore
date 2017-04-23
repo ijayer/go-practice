@@ -78,5 +78,7 @@ $RECYCLE.BIN/
 .idea/
 /node_modules/
 /package.json
-/uploadfile/girl.jpg
 /uploadfile/client_demo.go
+/https/testlogin.go
+/https/keys/
+/.gitignore
