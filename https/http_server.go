@@ -1,12 +1,12 @@
 package main
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"github.com/Sirupsen/logrus"
-	"net/http"
-	"crypto/x509"
 	"io/ioutil"
-	"crypto/tls"
+	"net/http"
 )
 
 type myHandler struct{}
@@ -22,15 +22,15 @@ func main() {
 	pool.AppendCertsFromPEM(caCrt)
 
 	server := &http.Server{
-		Addr:":8082",
+		Addr:    ":8082",
 		Handler: &myHandler{},
 		TLSConfig: &tls.Config{
-			ClientCAs: pool,
+			ClientCAs:  pool,
 			ClientAuth: tls.RequireAndVerifyClientCert,
 		},
 	}
 
-	logrus.Error(server.ListenAndServeTLS("server.crt","server.key"))
+	logrus.Error(server.ListenAndServeTLS("server.crt", "server.key"))
 }
 
 func checkErrors(err error) {

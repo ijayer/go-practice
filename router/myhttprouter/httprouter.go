@@ -1,10 +1,9 @@
 package myhttprouter
 
 import (
-	"github.com/julienschmidt/httprouter"
 	log "github.com/Sirupsen/logrus"
+	"github.com/julienschmidt/httprouter"
 	"net/http"
-
 )
 
 func MainHttpRouter(port *string) {
@@ -19,5 +18,5 @@ func MainHttpRouter(port *string) {
 	// static file server
 	router.ServeFiles("/static/*filepath", http.Dir("./router/static_sources"))
 
-	log.Fatal(http.ListenAndServe(":" + *port, router))
+	log.Fatal(http.ListenAndServe(":"+*port, router))
 }

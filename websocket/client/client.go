@@ -4,12 +4,12 @@ package main
 import (
 	"flag"
 	"log"
+	"net/url"
 	"os"
 	"os/signal"
-	"net/url"
 
-	"time"
 	"github.com/gorilla/websocket"
+	"time"
 )
 
 var host = flag.String("host", "localhost:8082", "http service host address")
@@ -26,8 +26,8 @@ func main() {
 	reader(conn, done)
 
 	type Data struct {
-		ID              string  `json:"id"`
-		Platform        string  `json:"platform"`
+		ID       string `json:"id"`
+		Platform string `json:"platform"`
 	}
 	dt := Data{"58bf9acbf608351f5c42395f", "windows"}
 	conn.WriteJSON(&dt)
@@ -37,7 +37,7 @@ func main() {
 }
 
 func connection() *websocket.Conn {
-	url := url.URL{Scheme:"ws", Host:*host, Path:"/ws"}
+	url := url.URL{Scheme: "ws", Host: *host, Path: "/ws"}
 	log.Printf("##_________url = %v\n", url.String())
 
 	conn, _, err := websocket.DefaultDialer.Dial(url.String(), nil)

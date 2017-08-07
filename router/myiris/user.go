@@ -1,11 +1,11 @@
 package myiris
 
 import (
-	"github.com/kataras/iris"
 	"fmt"
+	"github.com/kataras/iris"
 )
 
-type UserAPI struct{
+type UserAPI struct {
 	*iris.Context
 }
 

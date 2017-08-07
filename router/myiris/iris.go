@@ -10,9 +10,9 @@ func MainIris(port *string) {
 	})
 
 	// router
-	iris.Get ("/home",  testGet)
+	iris.Get("/home", testGet)
 	iris.Post("/login", testPost)
-	iris.Put ("/add",   testPut)
+	iris.Put("/add", testPut)
 
 	// api (RESTFul)
 	iris.API("/users/id", UserAPI{})

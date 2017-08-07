@@ -1,12 +1,12 @@
 package mygorilla
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"encoding/json"
 )
 
-func WriteJson(w http.ResponseWriter, v interface{}) error{
+func WriteJson(w http.ResponseWriter, v interface{}) error {
 	rd, _ := json.Marshal(v)
 	//gorilla cross origin para
 	w.Header().Set("Content-Type", "application/json")

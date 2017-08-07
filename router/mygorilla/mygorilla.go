@@ -1,11 +1,11 @@
 package mygorilla
 
 import (
+	log "github.com/Sirupsen/logrus"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"net/http"
-	"github.com/gorilla/handlers"
 	"time"
-	log "github.com/Sirupsen/logrus"
 )
 
 func MainGorilla(port *string) {
@@ -25,11 +25,11 @@ func MainGorilla(port *string) {
 	http.Handle("/api/sources", http.FileServer(http.Dir("./router/")))
 
 	server := &http.Server{
-		Handler:handlers.ContentTypeHandler(handlers.CORS(
+		Handler: handlers.ContentTypeHandler(handlers.CORS(
 			handlers.AllowedOrigins([]string{"*"}),
-			handlers.AllowedMethods([]string{"GET","POST","PUT","DELETE"}),
+			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"}),
 			handlers.AllowedHeaders([]string{"Content-Type"}))(r), "application/json"),
-		Addr:   ":"+*port,
+		Addr:         ":" + *port,
 		WriteTimeout: 30 * time.Second,
 		ReadTimeout:  30 * time.Second,
 	}

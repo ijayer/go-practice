@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"strings"
 	"net/http"
+	"strings"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/julienschmidt/httprouter"
@@ -53,10 +53,10 @@ func (s *UserResource) serveWs(w http.ResponseWriter, r *http.Request, params ht
 
 	// init instance of Conn
 	conn := &Connection{
-		id:             id,
-		send:           make(chan []byte, 256),
-		ws:             ws,
-		platform:       platform,
+		id:       id,
+		send:     make(chan []byte, 256),
+		ws:       ws,
+		platform: platform,
 	}
 	// register to map[connections]
 	hub.register <- conn

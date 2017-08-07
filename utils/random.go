@@ -1,11 +1,11 @@
 package utils
 
 import (
+	crand "crypto/rand"
 	"fmt"
-	"time"
 	"math/big"
 	mrand "math/rand"
-	crand "crypto/rand"
+	"time"
 )
 
 // Random return length bit random num
@@ -37,14 +37,14 @@ func RandNumMath() string {
 // RandNumCrypto return 6 bit random num by crypto
 func RandNumCrypto() string {
 	//rand.Read
-	k := make([]byte,32)
-	if _,err := crand.Read(k); err != nil {
+	k := make([]byte, 32)
+	if _, err := crand.Read(k); err != nil {
 		fmt.Printf("rand.Read() erro : %v \n", err)
 	}
 	//fmt.Printf("rand.Read(): %v \n", k)
 
 	//rand.Int
-	rnd, err := crand.Int(crand.Reader,big.NewInt(1000000))
+	rnd, err := crand.Int(crand.Reader, big.NewInt(1000000))
 	if err != nil {
 		fmt.Printf("rand.Int() error : %v \n", err)
 	}

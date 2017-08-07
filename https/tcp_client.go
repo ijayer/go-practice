@@ -52,6 +52,6 @@ func main() {
 			return
 		}
 		println(string(buf[:n]))
-		time.Sleep(1*time.Second)
+		time.Sleep(1 * time.Second)
 	}
 }

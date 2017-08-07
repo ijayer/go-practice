@@ -1,9 +1,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
-	"flag"
 	"net/http"
 )
 
@@ -14,7 +14,7 @@ func main() {
 	fmt.Printf("##_______________[Listen and serice on：%s]\n", *Port)
 	http.HandleFunc("/", indexHandle)
 	http.HandleFunc("/upload", uploadServer)
-	err := http.ListenAndServe(":" + *Port, nil)
+	err := http.ListenAndServe(":"+*Port, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}

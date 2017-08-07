@@ -1,13 +1,13 @@
 package main
 
 import (
-	"gopkg.in/mgo.v2"
 	"fmt"
+	"gopkg.in/mgo.v2"
 )
 
 type UserStorage struct {
-	CollectionName  string
-	Session         *mgo.Session
+	CollectionName string
+	Session        *mgo.Session
 }
 
 func (s *UserResource) Insert() {

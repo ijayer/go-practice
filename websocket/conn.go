@@ -1,21 +1,21 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"time"
-	"bytes"
 
-	"instance.golang.com/utils"
 	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/websocket"
+	"instance.golang.com/utils"
 	"net/http"
 )
 
 const (
-	writeWait  	= 10 * time.Second
-	pongWait   	= 60 * time.Second
-	pingPeriod 	= (pongWait * 9) / 10
-	maxMessageSize 	= 512
+	writeWait      = 10 * time.Second
+	pongWait       = 60 * time.Second
+	pingPeriod     = (pongWait * 9) / 10
+	maxMessageSize = 512
 )
 
 var (
@@ -26,7 +26,7 @@ var (
 var Upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
-	CheckOrigin:func(r *http.Request) bool {
+	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
 }
@@ -34,15 +34,14 @@ var Upgrader = websocket.Upgrader{
 // Conn is an middleman between the webSocket connection and the hub
 type Connection struct {
 	// id
-	id              string
+	id string
 	// platform
-	platform        string
+	platform string
 	// the web socket connection
-	ws 	        *websocket.Conn
+	ws *websocket.Conn
 	// buffered channel of outbound messages
-	send 	        chan []byte
+	send chan []byte
 }
-
 
 // reader pumps messages from the webSocket connection to the hub
 func (s *UserResource) Reader(c *Connection) {
@@ -88,7 +87,7 @@ func (s *UserResource) writer(c *Connection) {
 	}()
 	for {
 		select {
-		case message, ok := <- c.send:
+		case message, ok := <-c.send:
 			if !ok {
 				// the hub closed the channel
 				s.write(c, websocket.CloseMessage, []byte{})
@@ -105,7 +104,7 @@ func (s *UserResource) writer(c *Connection) {
 
 			// add queued chat messages to the current webSocket message
 			n := len(c.send)
-			for i:=0; i<n; i++ {
+			for i := 0; i < n; i++ {
 				fmt.Println("#Send queued messages to the current webSocket message")
 				w.Write(newLine)
 				w.Write(<-c.send)
@@ -115,7 +114,7 @@ func (s *UserResource) writer(c *Connection) {
 				return
 			}
 
-		case <- ticker.C:
+		case <-ticker.C:
 			fmt.Printf("##_________Send ping at: %v\n", utils.Now())
 			if err := s.write(c, websocket.PingMessage, []byte{'p'}); err != nil {
 				return

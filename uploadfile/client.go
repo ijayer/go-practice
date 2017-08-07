@@ -1,13 +1,13 @@
 package main
 
 import (
-	"net/http"
+	"encoding/base64"
 	"fmt"
 	"io"
-	"time"
 	"io/ioutil"
-	"encoding/base64"
+	"net/http"
 	"os"
+	"time"
 )
 
 func indexHandle(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +21,7 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "text/html")
 	w.WriteHeader(200)
 	html :=
-	`<html>
+		`<html>
 	    <head>
 	        <title>Golang Upload Files</title>
 	    </head>
@@ -84,26 +84,25 @@ func uploadServer(w http.ResponseWriter, r *http.Request) {
 
 				// encode to string and save into file
 				srcString := base64.StdEncoding.EncodeToString(src[0:num])
-				err = ioutil.WriteFile("./uploadfile/" + filename +".txt", []byte(srcString), 0666)
+				err = ioutil.WriteFile("./uploadfile/"+filename+".txt", []byte(srcString), 0666)
 				if err != nil {
 					fmt.Printf("#error: %v\n", err.Error())
 				}
 
 				// read from file and decode
-				tb, _ := ioutil.ReadFile("./uploadfile/"+filename+".txt")
+				tb, _ := ioutil.ReadFile("./uploadfile/" + filename + ".txt")
 				dist, _ := base64.StdEncoding.DecodeString(string(tb))
 
 				// create a new image file
-				f, _ := os.OpenFile("./uploadfile/new"+ filename + ".png", os.O_RDWR|os.O_CREATE, os.ModePerm)
+				f, _ := os.OpenFile("./uploadfile/new"+filename+".png", os.O_RDWR|os.O_CREATE, os.ModePerm)
 				defer f.Close()
 				f.Write(dist)
-
 
 				fmt.Printf(
 					"%s  NO.: %2d, Size: %4d KB, Name：%s,\n",
 					time.Now().Format("2006-01-02 15:04:05"),
 					n,
-					num / 1024,
+					num/1024,
 					filename,
 				)
 

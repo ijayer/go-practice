@@ -3,12 +3,12 @@ package main
 
 import (
 	"flag"
-	"net/http"
-	"text/template"
+	"fmt"
 	"github.com/Sirupsen/logrus"
 	"github.com/julienschmidt/httprouter"
-	"fmt"
 	"github.com/rs/cors"
+	"net/http"
+	"text/template"
 )
 
 var addr = flag.String("addr", ":8082", "http service addr")
@@ -26,7 +26,7 @@ func main() {
 	router.GET("/home", userResource.serveHome)
 	router.GET("/ws/*name", userResource.serveWs)
 
-	c := cors.New(cors.Options {
+	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
 		AllowedMethods: []string{"GET", "POST", "PATCH", "DELETE"},
 		AllowedHeaders: []string{"Content-Type"},
