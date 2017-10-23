@@ -2,8 +2,8 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
-	"github.com/kataras/go-errors"
 	"os"
 	"strings"
 )
