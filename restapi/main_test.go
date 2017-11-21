@@ -11,7 +11,7 @@ import (
 
 var app *App
 
-// test main
+// Test main
 func TestMain(m *testing.M) {
 	app = NewApp()
 	app.Init(DBName)
@@ -20,7 +20,7 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-// test clean up database
+// Test clean up database
 func TestApp_Clean(t *testing.T) {
 	app.Clean(DBName)
 
@@ -39,7 +39,7 @@ func TestApp_Clean(t *testing.T) {
 	}
 }
 
-// test find a not exist product
+// Test find a not exist product
 func TestGotNonExistentProduct(t *testing.T) {
 	app.Clean(DBName)
 
@@ -56,7 +56,7 @@ func TestGotNonExistentProduct(t *testing.T) {
 	}
 }
 
-// test add a product to the database
+// Test add a product to the database
 func TestApp_Create(t *testing.T) {
 	app.Clean(DBName)
 
@@ -86,6 +86,7 @@ func TestApp_Create(t *testing.T) {
 	}
 }
 
+// Test create a product
 func TestApp_Create2(t *testing.T) {
 	// app.Clean(DBName)
 	payload := []byte(`"name": "product", "price":11.22`)
@@ -101,7 +102,7 @@ func TestApp_Create2(t *testing.T) {
 	}
 }
 
-// test find a product
+// Test find a product
 func TestApp_FindOne(t *testing.T) {
 	//app.Clean(DBName)
 	//addProducts(1)
@@ -112,7 +113,7 @@ func TestApp_FindOne(t *testing.T) {
 	checkResponseCode(t, http.StatusOK, response.Code)
 }
 
-// test update one product
+// Test update a product
 func TestApp_Update(t *testing.T) {
 	//app.Clean(DBName)
 	//addProducts(1)
@@ -148,7 +149,7 @@ func TestApp_Update(t *testing.T) {
 	}
 }
 
-// test delete one product
+// Test delete a product
 func TestApp_Delete(t *testing.T) {
 	//app.Clean(DBName)
 	//addProducts(1)
@@ -167,21 +168,21 @@ func TestApp_Delete(t *testing.T) {
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 }
 
-// start a request
+// Execute a request
 func executeRequest(request *http.Request) *httptest.ResponseRecorder {
 	rr := httptest.NewRecorder()
 	app.Router.ServeHTTP(rr, request)
 	return rr
 }
 
-// check response code
+// Check response code
 func checkResponseCode(t *testing.T, want, usual int) {
 	if want != usual {
 		t.Errorf("excepted response code '%v', got '%v'", want, usual)
 	}
 }
 
-// add products to the database
+// Add products to the database
 func addProducts(num int) {
 	if num < 1 {
 		num = 1

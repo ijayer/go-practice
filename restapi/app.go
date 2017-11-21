@@ -19,7 +19,7 @@ type App struct {
 	Session *mgo.Session
 }
 
-// response for the http response
+// responder for the http response
 type Responder struct {
 	Total int         `json:"total"`
 	Data  interface{} `json:"data"`
@@ -46,13 +46,13 @@ func (a *App) Init(dbName string) {
 	a.initRoutes()
 }
 
-// Run start the application
+// Run the application
 func (a *App) Run(addr string) {
 	fmt.Printf("api listenning and serve on %v", addr)
 	log.Fatal(http.ListenAndServe(addr, a.Router))
 }
 
-// Clean clean up the database
+// Clean up the database
 func (a *App) Clean(dbName string) {
 	session := a.Session.Copy()
 	defer session.Close()
@@ -64,6 +64,7 @@ func (a *App) Clean(dbName string) {
 	// fmt.Printf("the database %v has been cleaned\n", dbName)
 }
 
+// Initialize api routes
 func (a *App) initRoutes() {
 	a.Router.HandleFunc("/products", a.Find).Methods(http.MethodGet)
 	a.Router.HandleFunc("/products", a.Create).Methods(http.MethodPost)
@@ -72,7 +73,7 @@ func (a *App) initRoutes() {
 	a.Router.HandleFunc("/products/{id:[0-9]+}", a.Delete).Methods(http.MethodDelete)
 }
 
-// Find list
+// Find list of products
 func (a *App) Find(w http.ResponseWriter, r *http.Request) {
 	limit, _ := strconv.Atoi(r.FormValue("limit"))
 	offset, _ := strconv.Atoi(r.FormValue("offset"))
@@ -96,7 +97,7 @@ func (a *App) Find(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusOK, Responder{Total: len(results), Data: results})
 }
 
-// create product
+// Create a product
 func (a *App) Create(w http.ResponseWriter, r *http.Request) {
 	var p product
 	decoder := json.NewDecoder(r.Body)
@@ -113,7 +114,7 @@ func (a *App) Create(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusCreated, Responder{Total: 1, Data: p})
 }
 
-// Find products
+// Find a product
 func (a *App) FindOne(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -135,7 +136,7 @@ func (a *App) FindOne(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusOK, Responder{Total: 1, Data: p})
 }
 
-// update product
+// Update a product
 func (a *App) Update(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -164,6 +165,7 @@ func (a *App) Update(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusOK, Responder{Total: 1, Data: p})
 }
 
+// Delete a product
 func (a *App) Delete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -180,12 +182,12 @@ func (a *App) Delete(w http.ResponseWriter, r *http.Request) {
 	respondWithJson(w, http.StatusOK, map[string]string{"result": "success"})
 }
 
-// respond with error to client
+// Respond with error to client
 func respondWithError(w http.ResponseWriter, code int, err string) {
 	respondWithJson(w, code, map[string]string{"error": err})
 }
 
-// respond with json to client
+// Respond with json to client
 func respondWithJson(w http.ResponseWriter, code int, payload interface{}) {
 	response, err := json.Marshal(payload)
 	if err != nil {
