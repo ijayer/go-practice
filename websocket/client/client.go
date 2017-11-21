@@ -7,12 +7,12 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	"time"
 
 	"github.com/gorilla/websocket"
-	"time"
 )
 
-var host = flag.String("host", "localhost:8082", "http service host address")
+var host = flag.String("host", "192.168.1.51:444", "http service host address")
 
 func main() {
 	flag.Parse()
@@ -37,14 +37,13 @@ func main() {
 }
 
 func connection() *websocket.Conn {
-	url := url.URL{Scheme: "ws", Host: *host, Path: "/ws"}
-	log.Printf("##_________url = %v\n", url.String())
+	u := url.URL{Scheme: "ws", Host: *host, Path: ""}
+	log.Printf("##_________url = %v\n", u.String())
 
-	conn, _, err := websocket.DefaultDialer.Dial(url.String(), nil)
+	conn, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
 	if err != nil {
 		log.Fatalf("#Dial error: %v\n", err)
 	}
-	defer conn.Close()
 
 	return conn
 }

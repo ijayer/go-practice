@@ -4,11 +4,12 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/http"
+	"text/template"
+
 	"github.com/Sirupsen/logrus"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
-	"net/http"
-	"text/template"
 )
 
 var addr = flag.String("addr", ":8082", "http service addr")

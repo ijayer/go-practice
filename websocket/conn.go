@@ -3,12 +3,12 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/websocket"
 	"instance.golang.com/utils"
-	"net/http"
 )
 
 const (
