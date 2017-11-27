@@ -1,6 +1,7 @@
 package main
 
 func main() {
-	Gomail()
+	// GoMail()
 	// Smtp()
+	GoMailWithSSL()
 }

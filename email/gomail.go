@@ -3,11 +3,12 @@ package main
 
 import (
 	"fmt"
+
 	"gopkg.in/gomail.v2"
 	"instance.golang.com/utils"
 )
 
-func Gomail() {
+func GoMail() {
 	// authentication config
 	ec := NewEmailConfig(
 		"smtp.163.com",    // email server host
@@ -21,11 +22,11 @@ func Gomail() {
 	body := "Verification code: " + utils.RandNumMath() + "\n\nThanks!"
 	//link := "Hello <a href = \"http://www.google.com\">google</a>"
 
-	fmt.Println("#______________start sending test mail...")
+	fmt.Println("start sending test mail...")
 	if err := sendEmail(ec, subject, body); err != nil {
-		fmt.Printf("#______________send failed: %v\n", err)
+		fmt.Printf("send failed: %v\n", err)
 	} else {
-		fmt.Println("#______________send success")
+		fmt.Println("send success")
 	}
 }
 
