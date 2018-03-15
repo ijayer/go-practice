@@ -51,3 +51,20 @@ func RandNumCrypto() string {
 	num := fmt.Sprintf("%06v", rnd)
 	return num
 }
+
+// GenerateRandNum 生成最大范围内随机数
+func GenerateRandNum() int {
+	mrand.Seed(time.Now().Unix())
+	randNum := mrand.Intn(100)
+	fmt.Printf("rand is %v\n", randNum)
+	return randNum
+}
+
+// GenerateRangeNum 生成一个区间范围的随机数
+func GenerateRangeNum(min, max int) int {
+	mrand.Seed(time.Now().Unix())
+	randNum := mrand.Intn(max - min)
+	randNum = randNum + min
+	fmt.Printf("rand is %v\n", randNum)
+	return randNum
+}
