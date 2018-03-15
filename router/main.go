@@ -3,9 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	log "github.com/Sirupsen/logrus"
-	"instance.golang.com/router/myiris"
 	"os"
+
+	log "github.com/sirupsen/logrus"
+	"instance.golang.com/router/myiris"
 )
 
 func init() {

@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/Sirupsen/logrus"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 func main() {

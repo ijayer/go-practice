@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"text/template"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
+	"github.com/sirupsen/logrus"
 )
 
 var addr = flag.String("addr", ":8082", "http service addr")

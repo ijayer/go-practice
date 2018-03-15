@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/Sirupsen/logrus"
 	"os"
 	"text/template"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 func main() {

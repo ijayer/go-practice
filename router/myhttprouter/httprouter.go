@@ -1,9 +1,10 @@
 package myhttprouter
 
 import (
-	log "github.com/Sirupsen/logrus"
-	"github.com/julienschmidt/httprouter"
 	"net/http"
+
+	"github.com/julienschmidt/httprouter"
+	log "github.com/sirupsen/logrus"
 )
 
 func MainHttpRouter(port *string) {
