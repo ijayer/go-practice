@@ -2,27 +2,30 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 
-	log "github.com/sirupsen/logrus"
-	"instance.golang.com/router/myiris"
+	"qx-api/src/utils"
+
+	"github.com/sirupsen/logrus"
+	"instance.golang.com/router/myhttprouter"
 )
 
+var port string
+
 func init() {
-	log.SetFormatter(&log.JSONFormatter{})
-	log.SetOutput(os.Stderr)
-	log.SetLevel(log.InfoLevel)
+	flag.StringVar(&port, "port", "8000", "http port")
+	flag.Parse()
+
+	logrus.SetFormatter(&logrus.TextFormatter{
+		ForceColors:     true,
+		FullTimestamp:   true,
+		TimestampFormat: utils.TimeLayout,
+	})
+	logrus.SetOutput(os.Stderr)
+	logrus.SetLevel(logrus.InfoLevel)
 }
 
-var Port = flag.String("port", "8000", "http port")
-
 func main() {
-	fmt.Printf("##_______________[Listen and serice on：%s]\n", *Port)
-
-	//myhttprouter.MainHttpRouter(Port)
-
-	//mygorilla.MainGorilla(Port)
-
-	myiris.MainIris(Port)
+	logrus.Infof("service listen and serve on: [:%s]", port)
+	myhttprouter.MainHttpRouter(port)
 }
