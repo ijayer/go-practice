@@ -10,12 +10,11 @@ package main
 import (
 	"os"
 
+	"qx-api/src/utils"
+
+	"github.com/omidnikta/logrus"
 	log "github.com/sirupsen/logrus"
 )
-
-func main() {
-	LogrusLevel()
-}
 
 // 设置默认的 Logger 参数
 func init() {
@@ -27,14 +26,48 @@ func init() {
 	log.SetLevel(log.DebugLevel)
 }
 
+func main() {
+	LogrusLevel()
+	LogrusTextFormatter()
+}
+
 // Logrus 等级输出, 默认Info及以上
 func LogrusLevel() {
 	log.Debug("Useful debugging information.")
 	log.Info("Something noteworthy happened!")
 	log.Warn("You should probably take a look at this.")
 	log.Error("Something failed but I'm not quitting.")
-	log.Fatal("Bye.")         //log之后会调用os.Exit(1)
-	log.Panic("I'm bailing.") //log之后会panic()
+	// log.Fatal("Bye.")         // log之后会调用os.Exit(1)
+	// log.Panic("I'm bailing.") // log之后会panic()
+}
+
+// Logrus 的非结构化日志定制输出(TextFormatter{}格式)
+//
+// 默认输出格式：time="2018-04-05T06:08:53+08:00" level=info msg="logrus log to lumberjack in normal text formatter"
+//
+// 如果isColored为false，输出的就是带有time, msg, level的结构化日志；只有isColored为true才能输出我们想要的普通日志。
+// isColored的值与三个属性有关：ForceColors 、isTerminal和DisableColors。我们按照让isColored为true的条件组合重新
+// 设置一下这三个属性，因为输出到file，因此isTerminal自动为false (https://tonybai.com/2018/04/06/the-problems-i-
+// encountered-when-writing-go-code-issue-3rd/?hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io)
+//
+// 定制 TextFormatter：
+//      1. 设置时间格式为：TimestampFormat = 2006-01-02 15:04:05
+//      2. 启用 Colors:   ForceColors = true
+func LogrusTextFormatter() {
+	l := logrus.NewEntry(&logrus.Logger{
+		Out: os.Stdout,
+		Formatter: &logrus.TextFormatter{
+			TimestampFormat: utils.TimeLayout,
+			FullTimestamp:   true,
+			ForceColors:     true,
+		},
+		Level: logrus.InfoLevel,
+	})
+	l.Info("info info info")
+	l.Warn("warn warn warn")
+	l.Error("error error error")
+	l.Fatal("fatal fatal fatal")
+	l.Panic("panic panic panic")
 }
 
 // Logrus 使用Fields
@@ -81,6 +114,6 @@ func LogrusNewLogger() {
 	l.Info("Something noteworthy happened!")
 	l.Warn("You should probably take a look at this.")
 	l.Error("Something failed but I'm not quitting.")
-	l.Fatal("Bye.")         //log之后会调用os.Exit(1)
-	l.Panic("I'm bailing.") //log之后会panic()
+	l.Fatal("Bye.")         // log之后会调用os.Exit(1)
+	l.Panic("I'm bailing.") // log之后会panic()
 }
