@@ -51,11 +51,11 @@ func Logger(next MyHandle) httprouter.Handle {
 				logrus.Info("key", v.(string))
 			}
 		}
-		logrus.Info(result.Data)
+		logrus.Infof("context params: %v", result.Data)
 
 		// request end
 		end := time.Now()
-		logrus.Infof("time cost: %v", end.Sub(start))
+		logrus.Infof("[%s] time cost: %v", r.URL.String(), end.Sub(start))
 	}
 }
 

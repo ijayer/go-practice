@@ -8,7 +8,10 @@ import (
 
 	"errors"
 
+	"time"
+
 	"github.com/julienschmidt/httprouter"
+	"github.com/sirupsen/logrus"
 )
 
 type Response struct {
@@ -19,20 +22,23 @@ type Response struct {
 
 // Index
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) (Response, error) {
-	fmt.Fprint(w, "Not protected, Welcome!\n")
+	cookie := r.Header.Get("Cookie")
+	logrus.Infof("Cookie: %v", cookie)
 
-	return Response{Ctx: r.Context(), Data: "index", Code: 200}, nil
+	// Write Response
+	fmt.Fprint(w, "Not protected, Welcome!\n")
+	fmt.Fprintf(w, "Cookie: %v\n", cookie)
+
+	return Response{Ctx: r.Context(), Data: cookie, Code: 200}, nil
 }
 
 // Hello
 func Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) (Response, error) {
-	var ctx = r.Context()
+	ctx := r.Context()
 	name := ps.ByName("name")
-
-	fmt.Fprint(w, name)
-
 	ctx = context.WithValue(ctx, "key", "123")
 
+	fmt.Fprint(w, name)
 	return Response{Ctx: ctx, Data: name, Code: 404}, errors.New("404 Forbidden")
 }
 
@@ -58,4 +64,33 @@ func BasicAuth(h httprouter.Handle, requiredUsername, requiredPassword string) h
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		}
 	}
+}
+
+// Cookie
+func Cookie(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	// Set Cookie
+	cookie := new(http.Cookie)
+	cookie.Name = "foo.1"
+	cookie.Value = "bar.1"
+	http.SetCookie(w, cookie)
+
+	cookie2 := new(http.Cookie)
+	cookie2.Name = "foo.2"
+	cookie2.Value = "bar.2"
+	cookie2.Path = "/index"
+	cookie2.Secure = true
+	cookie2.Domain = "test.robot-qixing.com"
+	cookie2.Expires = time.Now().UTC().Add(30 * time.Second)
+	http.SetCookie(w, cookie2)
+
+	cookie3 := new(http.Cookie)
+	cookie3.Name = "foo.3"
+	cookie3.Value = "bar.3"
+	http.SetCookie(w, cookie3)
+
+	fmt.Fprintf(w, "%s\n%s\n%s", cookie.String(), cookie2.String(), cookie3.String())
+}
+
+func Redirect(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	http.Redirect(w, r, "http://test.robot-qixing.com:1011/#/login", http.StatusTemporaryRedirect)
 }
