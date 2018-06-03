@@ -36,7 +36,7 @@ $(function () {
             appendLog($("<div><b>Connection closed.</b></div>"));
         };
         conn.onmessage = function (evt) {
-            var messages = evt.data.split('\n')
+            var messages = evt.data.split('\n');
             for (var i = 0; i < messages.length; i++) {
                 appendLog($("<div/>").text(messages[i]));
             }

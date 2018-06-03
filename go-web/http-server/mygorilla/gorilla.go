@@ -1,12 +1,18 @@
+/*
+ * 说明：
+ * 作者：zhe
+ * 时间：2018-05-25 2:42 PM
+ * 更新：
+ */
 package mygorilla
 
 import (
 	"net/http"
 	"time"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	log "github.com/sirupsen/logrus"
 )
 
 func MainGorilla(port *string) {
@@ -23,7 +29,7 @@ func MainGorilla(port *string) {
 	r.HandleFunc("/api/sources/songs", sourceStorage.DeleteMethodDemo).Methods("Delete")
 
 	// static file server
-	http.Handle("/api/sources", http.FileServer(http.Dir("./router/")))
+	http.Handle("/api/sources", http.FileServer(http.Dir("./myrouter/")))
 
 	server := &http.Server{
 		Handler: handlers.ContentTypeHandler(handlers.CORS(

@@ -80,7 +80,7 @@ func Cookie(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	cookie2.Path = "/index"
 	cookie2.Secure = true
 	cookie2.Domain = "test.robot-qixing.com"
-	cookie2.Expires = time.Now().UTC().Add(30 * time.Second)
+	cookie2.Expires = time.Now().AddDate(0, 0, 1)
 	http.SetCookie(w, cookie2)
 
 	cookie3 := new(http.Cookie)
@@ -89,6 +89,13 @@ func Cookie(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	http.SetCookie(w, cookie3)
 
 	fmt.Fprintf(w, "%s\n%s\n%s", cookie.String(), cookie2.String(), cookie3.String())
+
+	// Read Cookie
+	cookie, err := r.Cookie("foo.1")
+	if err != nil {
+		logrus.Errorf("read cookie failed: %v", err)
+	}
+	fmt.Fprintf(w, cookie.String())
 }
 
 func Redirect(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {

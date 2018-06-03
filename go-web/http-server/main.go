@@ -7,7 +7,7 @@ import (
 	"qx-api/src/utils"
 
 	"github.com/sirupsen/logrus"
-	"instance.golang.com/http-server/myhttprouter"
+	"instance.golang.com/go-web/http-server/myhttprouter"
 )
 
 var port string
