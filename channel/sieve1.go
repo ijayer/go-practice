@@ -16,7 +16,7 @@ func main() {
 		ch1 := make(chan int)
 		go filter(ch, ch1, prime)
 		ch = ch1
-		//time.Sleep(500 * time.Millisecond)
+		// time.Sleep(500 * time.Millisecond)
 	}
 }
 

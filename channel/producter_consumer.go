@@ -4,8 +4,8 @@ package main
 import "fmt"
 
 func main() {
-	var chnum chan int = make(chan int)
-	var done chan bool = make(chan bool)
+	var chnum = make(chan int)
+	var done = make(chan bool)
 
 	go producter(0, 1000, chnum)
 	go consumer(chnum, done)
