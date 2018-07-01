@@ -10,18 +10,23 @@ package main
 import (
 	"os"
 
-	"qx-api/src/utils"
+	"instance.golang.com/utils"
 
 	"github.com/omidnikta/logrus"
+	"github.com/shiena/ansicolor"
 	log "github.com/sirupsen/logrus"
 )
 
 // 设置默认的 Logger 参数
 func init() {
 	// 设置输出样式，自带的只有两种样式logrus.JSONFormatter{}和logrus.TextFormatter{}
-	log.SetFormatter(&log.TextFormatter{})
+	log.SetFormatter(&log.TextFormatter{
+		ForceColors:     true,
+		FullTimestamp:   true,
+		TimestampFormat: utils.TimeLayout,
+	})
 	// 设置output,默认为stderr,可以为任何io.Writer，比如文件*os.File
-	log.SetOutput(os.Stdout)
+	logrus.SetOutput(ansicolor.NewAnsiColorWriter(os.Stdout))
 	// 设置最低log level
 	log.SetLevel(log.DebugLevel)
 }
