@@ -8,8 +8,6 @@ ModifyAt: 20180912
 
 ## Overview
 
-- CLI
-
 - Crontab
 
 - Email
