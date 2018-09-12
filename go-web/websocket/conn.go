@@ -8,7 +8,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
-	"instance.golang.com/utils"
+	"github.com/zhezh09/go-practice/utils"
 )
 
 const (

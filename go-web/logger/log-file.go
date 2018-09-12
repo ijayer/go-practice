@@ -10,7 +10,7 @@ package main
 import (
 	"os"
 
-	"service.robot.com/util"
+	"github.com/zhezh09/go-practice/utils"
 
 	"github.com/rifflock/lfshook"
 	"github.com/shiena/ansicolor"
@@ -47,8 +47,8 @@ func configLogger(env string) {
 
 	case "prod":
 		pathMap := lfshook.PathMap{
-			logrus.InfoLevel:  "log/" + util.Date() + "/x-change.info.log",
-			logrus.ErrorLevel: "log/" + util.Date() + "/x-change.erro.log",
+			logrus.InfoLevel:  "log/" + utils.Date() + "/x-change.info.log",
+			logrus.ErrorLevel: "log/" + utils.Date() + "/x-change.erro.log",
 		}
 		l.AddHook(lfshook.NewHook(
 			pathMap,
@@ -72,7 +72,7 @@ func configLogger(env string) {
 		// logger.SetLevel(logrus.InfoLevel)
 	}
 
-	filenameHook := util.NewHook()
+	filenameHook := utils.NewHook()
 	filenameHook.Field = "caller"
 	l.AddHook(filenameHook)
 

@@ -4,10 +4,10 @@ import (
 	"flag"
 	"os"
 
-	"qx-api/src/utils"
+	"github.com/zhezh09/go-practice/utils"
 
 	"github.com/sirupsen/logrus"
-	"instance.golang.com/go-web/http-server/myhttprouter"
+	"github.com/zhezh09/go-practice/go-web/http-server/myhttprouter"
 )
 
 var port string

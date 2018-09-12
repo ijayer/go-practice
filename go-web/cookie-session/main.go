@@ -19,7 +19,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/sirupsen/logrus"
 
-	"instance.golang.com/utils"
+	"github.com/zhezh09/go-practice/utils"
 )
 
 const maxLifeTime = 36 // unit: second

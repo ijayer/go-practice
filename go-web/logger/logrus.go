@@ -10,7 +10,7 @@ package main
 import (
 	"os"
 
-	"instance.golang.com/utils"
+	"github.com/zhezh09/go-practice/utils"
 
 	"github.com/omidnikta/logrus"
 	"github.com/shiena/ansicolor"
