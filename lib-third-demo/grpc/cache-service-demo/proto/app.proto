@@ -1,0 +1,76 @@
+/*
+ * 说明：gRPC IDL: cache service demo
+ * 作者：zhe
+ * 时间：2018-09-10 4:46 PM
+ * 更新：
+ */
+
+syntax = "proto3";
+
+package rpc;
+
+// Cache Service
+service Cache {
+    rpc Store (StoreReq) returns (StoreResp) {
+    }
+    rpc Get (GetReq) returns (GetResp) {
+    }
+    rpc Dump (DumpReq) returns (stream DumpItem) {
+    }
+}
+
+message StoreReq {
+    string key = 1;
+    bytes val = 2;
+    string account_token = 3;
+}
+
+message StoreResp {
+}
+
+message GetReq {
+    string key = 1;
+}
+
+message GetResp {
+    bytes val = 1;
+}
+
+message DumpReq {
+}
+
+// Unary RPC
+//message DumpResp {
+//    repeated DumpItem items = 1; // repeated: -> array
+//}
+
+// Stream RPC
+message DumpItem {
+    string key = 1;
+    bytes val = 2;
+}
+
+// Accounts Service
+service Accounts {
+    rpc GetByToken (GetByTokenReq) returns (GetByTokenResp) {
+    }
+}
+
+message GetByTokenReq {
+    string token = 1;
+}
+
+message GetByTokenResp {
+    Account account = 1;
+}
+
+message Account {
+    int64 max_cache_keys = 1;
+}
+
+message Error {
+    int64 code = 1;
+    string message = 2;
+    bool temporary = 3;
+    int64 userErrorCode = 4;
+}
