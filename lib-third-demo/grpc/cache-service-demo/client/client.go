@@ -13,7 +13,8 @@ import (
 	"os"
 	"time"
 
-	"cache-service/interceptor"
+	interceptor "cache-service/interceptor"
+	rpc "cache-service/proto"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
