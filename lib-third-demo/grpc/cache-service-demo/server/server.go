@@ -12,7 +12,8 @@ import (
 	"net"
 	"os"
 
-	"cache-service/interceptor"
+	interceptor "cache-service/interceptor"
+	rpc "cache-service/proto"
 
 	"golang.org/x/net/context"
 	"golang.org/x/net/netutil"
