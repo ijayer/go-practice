@@ -7,32 +7,34 @@ import (
 	"net/http/httptest"
 	"os"
 	"testing"
+
+	"cicd/api"
 )
 
-var app *App
+var app *api.App
 
 // Test main
 func TestMain(m *testing.M) {
-	app = NewApp()
-	app.Init(DBName)
+	app = api.NewApp()
+	app.InitMgo(api.DBName, api.DBAddr)
 	code := m.Run()
-	app.Clean(DBName)
+	app.Clean(api.DBName)
 	os.Exit(code)
 }
 
 // Test clean up database
 func TestApp_Clean(t *testing.T) {
-	app.Clean(DBName)
+	app.Clean(api.DBName)
 
 	// http request
-	req, _ := http.NewRequest(http.MethodGet, "/products", nil)
+	req, _ := http.NewRequest(http.MethodGet, "/v0/products", nil)
 	resp := executeRequest(req)
 
 	// check response code
 	checkResponseCode(t, http.StatusOK, resp.Code)
 
 	// check respond data
-	var results []product
+	var results []api.Product
 	json.Unmarshal(resp.Body.Bytes(), results)
 	if len(results) != 0 {
 		t.Errorf("excepetd an empty array, got '%v'", results)
@@ -41,9 +43,9 @@ func TestApp_Clean(t *testing.T) {
 
 // Test find a not exist product
 func TestGotNonExistentProduct(t *testing.T) {
-	app.Clean(DBName)
+	app.Clean(api.DBName)
 
-	req, _ := http.NewRequest(http.MethodGet, "/products/201711190252", nil)
+	req, _ := http.NewRequest(http.MethodGet, "/v0/products/201711190252", nil)
 	resp := executeRequest(req)
 
 	checkResponseCode(t, http.StatusNotFound, resp.Code)
@@ -58,10 +60,10 @@ func TestGotNonExistentProduct(t *testing.T) {
 
 // Test add a product to the database
 func TestApp_Create(t *testing.T) {
-	app.Clean(DBName)
+	app.Clean(api.DBName)
 
 	payload := []byte(`{"name": "product", "price":11.22}`)
-	req, _ := http.NewRequest(http.MethodPost, "/products", bytes.NewReader(payload))
+	req, _ := http.NewRequest(http.MethodPost, "/v0/products", bytes.NewReader(payload))
 	resp := executeRequest(req)
 
 	if resp.Code == http.StatusBadRequest {
@@ -90,7 +92,7 @@ func TestApp_Create(t *testing.T) {
 func TestApp_Create2(t *testing.T) {
 	// app.Clean(DBName)
 	payload := []byte(`"name": "product", "price":11.22`)
-	req, _ := http.NewRequest(http.MethodPost, "/products", bytes.NewReader(payload))
+	req, _ := http.NewRequest(http.MethodPost, "/v0/products", bytes.NewReader(payload))
 	resp := executeRequest(req)
 
 	checkResponseCode(t, http.StatusBadRequest, resp.Code)
@@ -104,10 +106,10 @@ func TestApp_Create2(t *testing.T) {
 
 // Test find a product
 func TestApp_FindOne(t *testing.T) {
-	//app.Clean(DBName)
-	//addProducts(1)
+	// app.Clean(DBName)
+	// addProducts(1)
 
-	req, _ := http.NewRequest("GET", "/products/0", nil)
+	req, _ := http.NewRequest("GET", "/v0/products/0", nil)
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
@@ -115,11 +117,11 @@ func TestApp_FindOne(t *testing.T) {
 
 // Test update a product
 func TestApp_Update(t *testing.T) {
-	//app.Clean(DBName)
-	//addProducts(1)
+	// app.Clean(DBName)
+	// addProducts(1)
 
 	// obtain original product data
-	req, _ := http.NewRequest("GET", "/products/0", nil)
+	req, _ := http.NewRequest("GET", "/v0/products/0", nil)
 	resp := executeRequest(req)
 	var originalProduct map[string]interface{}
 	json.Unmarshal(resp.Body.Bytes(), &originalProduct)
@@ -127,7 +129,7 @@ func TestApp_Update(t *testing.T) {
 
 	// update the product data
 	payload := []byte(`{"name":"product-u0","price":22.22}`)
-	req, _ = http.NewRequest("PUT", "/products/0", bytes.NewBuffer(payload))
+	req, _ = http.NewRequest("PUT", "/v0/products/0", bytes.NewBuffer(payload))
 	resp = executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, resp.Code)
@@ -151,19 +153,19 @@ func TestApp_Update(t *testing.T) {
 
 // Test delete a product
 func TestApp_Delete(t *testing.T) {
-	//app.Clean(DBName)
-	//addProducts(1)
+	// app.Clean(DBName)
+	// addProducts(1)
 
-	req, _ := http.NewRequest("GET", "/products/0", nil)
+	req, _ := http.NewRequest("GET", "/v0/products/0", nil)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 
-	req, _ = http.NewRequest("DELETE", "/products/0", nil)
+	req, _ = http.NewRequest("DELETE", "/v0/products/0", nil)
 	response = executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
 
-	req, _ = http.NewRequest("GET", "/products/0", nil)
+	req, _ = http.NewRequest("GET", "/v0/products/0", nil)
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 }
@@ -190,8 +192,8 @@ func addProducts(num int) {
 
 	session := app.Session.Copy()
 	defer session.Close()
-	co := session.DB(DBName).C("products")
+	co := session.DB(api.DBName).C("products")
 	for i := 0; i < num; i++ {
-		co.Insert(&product{PID: i, Name: "product", Price: (float64(i) + 1.0) * 10})
+		co.Insert(&api.Product{PID: i, Name: "product", Price: (float64(i) + 1.0) * 10})
 	}
 }

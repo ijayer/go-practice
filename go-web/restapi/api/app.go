@@ -1,8 +1,7 @@
-package main
+package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -13,8 +12,14 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// Define
+var DBName string
+var DBAddr string
+var Addr string
+
 // define struct App, to hold our applications
 type App struct {
+	ver     string
 	Router  *mux.Router
 	Session *mgo.Session
 }
@@ -27,15 +32,16 @@ type Responder struct {
 
 // NewApp return an instance of App
 func NewApp() *App {
-	return &App{}
+	return &App{ver: "v0"}
 }
 
 // Initialize init the application
-func (a *App) Init(dbName string) {
+func (a *App) InitMgo(db, addr string) {
+	log.Printf("mgo listen and serve on [%v, %v]\n", db, addr)
 	dialInfo := &mgo.DialInfo{
-		Addrs:    []string{"localhost:27017"},
-		Timeout:  time.Second * 60,
-		Database: dbName,
+		Addrs:    []string{addr},
+		Timeout:  time.Second * 30,
+		Database: db,
 	}
 	session, err := mgo.DialWithInfo(dialInfo)
 	if err != nil {
@@ -48,8 +54,8 @@ func (a *App) Init(dbName string) {
 
 // Run the application
 func (a *App) Run(addr string) {
-	fmt.Printf("api listenning and serve on %v", addr)
-	log.Fatal(http.ListenAndServe(addr, a.Router))
+	log.Printf("api listen and serve on [:%v]\n", addr)
+	log.Fatal(http.ListenAndServe(":"+addr, a.Router))
 }
 
 // Clean up the database
@@ -66,11 +72,11 @@ func (a *App) Clean(dbName string) {
 
 // Initialize api routes
 func (a *App) initRoutes() {
-	a.Router.HandleFunc("/products", a.Find).Methods(http.MethodGet)
-	a.Router.HandleFunc("/products", a.Create).Methods(http.MethodPost)
-	a.Router.HandleFunc("/products/{id:[0-9]+}", a.FindOne).Methods(http.MethodGet)
-	a.Router.HandleFunc("/products/{id:[0-9]+}", a.Update).Methods(http.MethodPut)
-	a.Router.HandleFunc("/products/{id:[0-9]+}", a.Delete).Methods(http.MethodDelete)
+	a.Router.HandleFunc("/"+a.ver+"/products", a.Find).Methods(http.MethodGet)
+	a.Router.HandleFunc("/"+a.ver+"/products", a.Create).Methods(http.MethodPost)
+	a.Router.HandleFunc("/"+a.ver+"/products/{id:[0-9]+}", a.FindOne).Methods(http.MethodGet)
+	a.Router.HandleFunc("/"+a.ver+"/products/{id:[0-9]+}", a.Update).Methods(http.MethodPut)
+	a.Router.HandleFunc("/"+a.ver+"/products/{id:[0-9]+}", a.Delete).Methods(http.MethodDelete)
 }
 
 // Find list of products
@@ -99,7 +105,7 @@ func (a *App) Find(w http.ResponseWriter, r *http.Request) {
 
 // Create a product
 func (a *App) Create(w http.ResponseWriter, r *http.Request) {
-	var p product
+	var p Product
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&p); err != nil {
 		respondWithError(w, http.StatusBadRequest, "invalid request payload")
@@ -123,7 +129,7 @@ func (a *App) FindOne(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p := product{PID: id}
+	p := Product{PID: id}
 	if p, err = p.findOne(id, a.Session); err != nil {
 		switch err {
 		case mgo.ErrNotFound:
@@ -144,7 +150,7 @@ func (a *App) Update(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "invalid product id")
 		return
 	}
-	var p product
+	var p Product
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&p); err != nil {
 		respondWithError(w, http.StatusBadRequest, "invalid request payload")
@@ -174,7 +180,7 @@ func (a *App) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p := product{PID: id}
+	p := Product{PID: id}
 	if err := p.delete(bson.M{"pid": id}, a.Session); err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
