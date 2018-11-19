@@ -23,7 +23,7 @@ import (
 
 func Run() {
 	if err := runClient(); err != nil {
-		fmt.Fprintf(os.Stderr, "failed to run client: %v\n", err)
+		Fprintf(os.Stderr, "failed to run client: %v\n", err)
 		os.Exit(1)
 	}
 }
@@ -34,7 +34,7 @@ func runClient() error {
 	// 建立连接
 	conn, err := grpc.Dial("localhost:5051", grpc.WithInsecure(), interceptor.WithClientInterceptor())
 	if err != nil {
-		return fmt.Errorf("failed to dial server: %v", err)
+		return Errorf("failed to dial server: %v", err)
 	}
 
 	// 初始化 Cache 客户端对象

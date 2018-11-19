@@ -8,8 +8,9 @@
 package main
 
 import (
-	"cicd/api"
 	"flag"
+
+	"go-web/api"
 )
 
 func init() {

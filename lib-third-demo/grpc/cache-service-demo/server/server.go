@@ -8,7 +8,6 @@
 package server
 
 import (
-	"fmt"
 	"net"
 	"os"
 
@@ -31,7 +30,7 @@ const (
 // Run run server
 func Run() {
 	if err := runServer(); err != nil {
-		fmt.Fprintf(os.Stderr, "failed to run cache server: %s\n", err)
+		Fprintf(os.Stderr, "failed to run cache server: %s\n", err)
 		os.Exit(1)
 	}
 }
@@ -54,7 +53,7 @@ func runServer() error {
 	// 运行服务
 	l, err := net.Listen("tcp", addr)
 	if err != nil {
-		return fmt.Errorf("listen error: %v", err)
+		return Errorf("listen error: %v", err)
 	}
 	l = netutil.LimitListener(l, 1014) // 限制总共可以有多少个连接
 
@@ -111,13 +110,13 @@ func (s *CacheService) Store(ctx context.Context, req *rpc.StoreReq) (*rpc.Store
 
 	// 创建 Account 的客户端连接
 	if err := s.initAccounts(); err != nil {
-		return nil, fmt.Errorf("failed to dial server in s.initAccounts: %v", err)
+		return nil, Errorf("failed to dial server in s.initAccounts: %v", err)
 	}
 
 	// 调用另一个服务获取账户的信息，包含其键值限制
 	resp, err := s.accounts.GetByToken(ctx, &rpc.GetByTokenReq{Token: req.AccountToken})
 	if err != nil {
-		return nil, fmt.Errorf("failed s.accounts.GetByToken: %v", err)
+		return nil, Errorf("failed s.accounts.GetByToken: %v", err)
 	}
 
 	// 检查是否超量使用
@@ -150,7 +149,7 @@ func (s *CacheService) initAccounts() error {
 	// 建立连接
 	conn, err := grpc.Dial("localhost:5051", grpc.WithInsecure(), interceptor.WithClientInterceptor())
 	if err != nil {
-		return fmt.Errorf("failed to dial server: %v", err)
+		return Errorf("failed to dial server: %v", err)
 	}
 	s.accounts = rpc.NewAccountsClient(conn)
 	return nil

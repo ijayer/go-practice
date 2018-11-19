@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"cicd/api"
+	"go-web/api"
 )
 
 var app *api.App
