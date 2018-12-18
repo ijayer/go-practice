@@ -2,12 +2,12 @@ Go Advanced
 ===========
 ```
 AuthorBy: zher
-CreateAt:
-ModifyAt:
+CreateAt: 20180101
+ModifyAt: 20181206
 ```
 
-> 深入研究实践 Go 的一些特性的 Demo
+> 深入研究 Go 相关特性的 Demo
 
-## Changed Log
+## CHANGELOG
 
 - [20180912] Rearrange the project
